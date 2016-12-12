@@ -1,0 +1,20 @@
+<h1>Lista postów:</h1>
+<ul>
+    <li ng-repeat="post in posts">
+    	<h1>
+        	<a href="/angularWordpress/#!/{{post.slug}}">
+            	Link do Angulara: {{post.title.rendered}}
+        	</a>
+        </h1>
+        <h3>
+        	<a href="{{post.link}}">
+            	Link do Wordpressa: {{post.title.rendered}}
+        	</a>
+        </h3>
+
+        <span>Napisano: {{post.date}}</span><br/>
+        <span>Post type: {{post.type}}</span>
+        <p style="margin-top:20px;">{{post.content.rendered | htmlToPlaintext}}</p>
+        <!--<p><a href="{{post.link}}#respond">Wordpress: Leave a comment</a></p>-->
+    </li>
+</ul>

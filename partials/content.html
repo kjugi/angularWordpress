@@ -1,0 +1,9 @@
+<h1>{{title}}</h1>
+<span><strong>Napisano:</strong> {{date}}</span><br/>
+<span><strong>Post type:</strong> {{type}}</span>
+
+<p style="margin-top:20px;">{{content | htmlToPlaintext}}</p>
+
+<span ng-click="categories()">
+Kategorie: {{categoryList}}
+</span>

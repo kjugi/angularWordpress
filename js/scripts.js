@@ -26,7 +26,7 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
     	}
     );
 }])
-.controller('Content', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
+.controller('Content', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams, Data) {
 	//console.log('controller part working2'); 
     $http.get('angularWordpress/index.php/wp-json/wp/v2/posts?slug=' + $routeParams.slug).then(
     	function success(res){
@@ -36,29 +36,57 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
     		$scope.type = res.data[0].type;
     		$scope.content = res.data[0].content.rendered;
 
-    		//$scope.categories = res.data[0].categories[0];
-    		$scope.categories = function(){
-    			$scope.categoryList = [];
+    		$scope.categories = res.data[0].categories;
+
+            $scope.test = "test";
+            $scope.$watch('test', function (newValue, oldValue) {
+                if (newValue !== oldValue) Data.setFirstName(newValue);
+            });
+/*
+            $scope.category = function(){
     			var categoriesLength = res.data[0].categories.length;
 
     			for(var i=0; i<categoriesLength; i++){
-	    			$http.get('angularWordpress/index.php/wp-json/wp/v2/categories/'+res.data[0].categories[i]).then(
-						function success(response){
-							$scope.categoryList.push(response.data);
-						},
-						function error(response){
-							console.log(response);
-						}
-	    			);
+        			$http.get('angularWordpress/index.php/wp-json/wp/v2/categories/'+res.data[0].categories[i]).then(
+    					function success(response){
+                            //console.log(response.data.name);
+    						$scope.categoryName = response.data.name;
+                            $scope.categoryLink = response.data.link;
+    					},
+    					function error(response){
+    						console.log(response);
+    					}
+        			);
     			}
-    			console.log($scope.categoryList);
-    		};
+                console.log($scope.categoryName);
+            }*/
     	},
     	function error(res){
     		console.log(res);
     	}
     );
 }])
+.controller('test',function($scope, Data){
+    $scope.$watch(function () { return Data.getFirstName(); }, function (newValue, oldValue) {
+        if (newValue !== oldValue) $scope.categories = newValue;
+    });
+
+    console.log($scope.categories);
+})
+.factory('Data', function(){
+    var data = {
+        FirstName: ''
+    };
+
+    return {
+        getFirstName: function () {
+            return data.FirstName;
+        },
+        setFirstName: function (categories) {
+            data.FirstName = categories;
+        }
+    };
+})
 /*.controller('categories', ['$scope', '$http', '$routeParams', function($scope,$http, $routeParams){
 	$scope.init = function(]){
 		$scope.result = "";

@@ -179,3 +179,6 @@ wp_localize_script('scripts', 'localized',
         'partials' => get_stylesheet_directory_uri() . '/partials/'
         )
 );
+
+wp_enqueue_script('angularjs-sanitize', get_stylesheet_directory_uri() . '/wp-angular/node_modules/angular-sanitize/angular-sanitize.min.js');
+wp_enqueue_script('theme-service', get_stylesheet_directory_uri() . '/js/services.js');

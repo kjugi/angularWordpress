@@ -1,4 +1,4 @@
-var app = angular.module('wp', ['ngRoute']);
+var app = angular.module('wp', ['ngRoute', 'ngSanitize']);
 
 app.config(['$routeProvider','$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider
@@ -14,9 +14,10 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
     	redirectTo: '/'
     });
 }])
-.controller('Main', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
+.controller('Main', ['$scope', '$http', 'ThemeServices', function($scope, $http, ThemeServices) {
 	//console.log('controller part working1'); 
-    $http.get('angularWordpress/index.php/wp-json/wp/v2/posts').then(
+
+    /*$http.get('angularWordpress/index.php/wp-json/wp/v2/posts').then(
     	function success(res){
     		console.log(res.data);
 	        $scope.posts = res.data;
@@ -24,7 +25,15 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
     	function error(res){
     		console.log(res);
     	}
-    );
+    );*/
+
+    //Get Categories from ThemeService
+    ThemeService.getAllCategories();
+     
+    //Get the first page of posts from ThemeService
+    ThemeService.getPosts(1);
+ 
+    $scope.data = ThemeService;
 }])
 .controller('Content', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams, Data) {
 	//console.log('controller part working2'); 
@@ -35,58 +44,12 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
     		$scope.date = res.data[0].date;
     		$scope.type = res.data[0].type;
     		$scope.content = res.data[0].content.rendered;
-
-    		$scope.categories = res.data[0].categories;
-
-            $scope.test = "test";
-            $scope.$watch('test', function (newValue, oldValue) {
-                if (newValue !== oldValue) Data.setFirstName(newValue);
-            });
-/*
-            $scope.category = function(){
-    			var categoriesLength = res.data[0].categories.length;
-
-    			for(var i=0; i<categoriesLength; i++){
-        			$http.get('angularWordpress/index.php/wp-json/wp/v2/categories/'+res.data[0].categories[i]).then(
-    					function success(response){
-                            //console.log(response.data.name);
-    						$scope.categoryName = response.data.name;
-                            $scope.categoryLink = response.data.link;
-    					},
-    					function error(response){
-    						console.log(response);
-    					}
-        			);
-    			}
-                console.log($scope.categoryName);
-            }*/
     	},
     	function error(res){
     		console.log(res);
     	}
     );
 }])
-.controller('test',function($scope, Data){
-    $scope.$watch(function () { return Data.getFirstName(); }, function (newValue, oldValue) {
-        if (newValue !== oldValue) $scope.categories = newValue;
-    });
-
-    console.log($scope.categories);
-})
-.factory('Data', function(){
-    var data = {
-        FirstName: ''
-    };
-
-    return {
-        getFirstName: function () {
-            return data.FirstName;
-        },
-        setFirstName: function (categories) {
-            data.FirstName = categories;
-        }
-    };
-})
 /*.controller('categories', ['$scope', '$http', '$routeParams', function($scope,$http, $routeParams){
 	$scope.init = function(]){
 		$scope.result = "";
